@@ -93,11 +93,6 @@ router.post('/', [
                 });
             })
 
-
-
-            // console.log(req.body)
-            // res.send("User registered")
-
         } catch (err) {
             console.log(err.message)
             res.status(500).send('Server Error');

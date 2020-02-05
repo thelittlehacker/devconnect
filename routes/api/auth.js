@@ -11,19 +11,17 @@ const {
 } = require('express-validator')
 
 // @route  GET api/auth
-// @desc   TEST route
-// @access Public
+// @desc   Get user profile
+// @access Private
 router.get('/', auth, async (req, res) => {
-        try {
-
-            const user = await User.findById(req.user.id).select('-password');
-
-            res.json(user);
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).send('Server Error');
-        }
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
+}
 
 );
 
@@ -32,11 +30,11 @@ router.get('/', auth, async (req, res) => {
 // @desc   Authenticate user and get token
 // @access Public
 router.post('/', [
-        check('email', 'Please include a valid email')
+    check('email', 'Please include a valid email')
         .isEmail(),
-        check('password', 'Password is required')
+    check('password', 'Password is required')
         .exists()
-    ],
+],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -66,7 +64,7 @@ router.post('/', [
 
             const isMatched = await bcrypt.compare(password, user.password)
 
-            if(!isMatched){
+            if (!isMatched) {
                 return res.status(400).json({
                     error: [{
                         msg: 'Invalid credential'
@@ -92,11 +90,6 @@ router.post('/', [
                     token
                 });
             })
-
-
-
-            // console.log(req.body)
-            // res.send("User registered")
 
         } catch (err) {
             console.log(err.message)

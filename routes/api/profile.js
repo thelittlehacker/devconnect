@@ -4,6 +4,7 @@ const request = require('request')
 const config = require('config')
 const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
+const Post = require('../../models/Post')
 const User = require('../../models/User');
 const {
   check,
@@ -18,6 +19,7 @@ router.get('/me', auth, async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id
     }).populate('user', ['name', 'avatar']);
+
 
     if (!profile) {
       return res.status(400).json({
@@ -41,11 +43,11 @@ router.post(
     auth,
     [
       check('status', 'Status is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('skills', 'Skills is required')
-      .not()
-      .isEmpty()
+        .not()
+        .isEmpty()
     ]
   ],
   async (req, res) => {
@@ -142,7 +144,7 @@ router.get('/', async (req, res) => {
 });
 
 // @route  GET api/profile/user/:user_id
-// @desc   Get profiles bu user ID
+// @desc   Get profiles by user ID
 // @access Public
 
 router.get('/user/:user_id', async (req, res) => {
@@ -175,6 +177,8 @@ router.get('/user/:user_id', async (req, res) => {
 router.delete('/', auth, async (req, res) => {
   try {
     // @todo - remove user post
+    // Remove user posts
+    await Post.deleteMany({ user: req.user.id });
 
     // Remove Profile
     await Profile.findOneAndRemove({
@@ -205,14 +209,14 @@ router.put(
     auth,
     [
       check('title', 'Title should not be empty')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('company', 'Company should not be empty')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('from', 'from should not be empty')
-      .not()
-      .isEmpty()
+        .not()
+        .isEmpty()
     ]
   ],
   async (req, res) => {
@@ -290,17 +294,17 @@ router.put(
     auth,
     [
       check('school', 'School is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('degree', 'Degree is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('fieldofstudy', 'Field of Study is required')
-      .not()
-      .isEmpty(),
+        .not()
+        .isEmpty(),
       check('from', 'From date is required')
-      .not()
-      .isEmpty()
+        .not()
+        .isEmpty()
     ]
   ],
   async (req, res) => {

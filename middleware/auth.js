@@ -18,8 +18,10 @@ module.exports = function (req, res, next) {
     // Verify token
 
     try {
-        const decode = jwt.verify(token, config.get('jwtToken'))
-        req.user = decode.user;
+        const decoded = jwt.verify(token, config.get('jwtToken'))
+
+        //Take the request object and assign the value to user  = setting to decoded value which has user payload.
+        req.user = decoded.user;
         next();
 
     } catch (err) {
